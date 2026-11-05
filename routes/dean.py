@@ -9,7 +9,7 @@ from validators import (REPORT_FORMS, STUDY_FORMS, validate_plan,
 bp = Blueprint("dean", __name__, url_prefix="/dean")
 
 
-# ---------- Студенты ----------
+# Студенты
 
 @bp.route("/students")
 def students():
