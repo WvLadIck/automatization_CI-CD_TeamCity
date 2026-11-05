@@ -2,23 +2,31 @@
 {% block title %}Журнал успеваемости{% endblock %}
 {% block content %}
 <h1>Журнал успеваемости</h1>
-<p><a class="button" href="{{ url_for('teacher.grade_new') }}">Добавить оценку</a></p>
+<p><a class="button" href="{{ url_for('teacher.grade_new') }}">Добавить запись</a></p>
 <div class="table-wrap">
 <table>
-  <thead><tr><th>Учебный год</th><th>Семестр</th><th>Студент</th><th>Группа</th><th>Дисциплина</th><th>Оценка</th><th></th></tr></thead>
+  <thead><tr><th>Дата</th><th>Уч. год</th><th>Студент</th><th>Группа</th><th>Дисциплина</th><th>Попытка</th><th>Результат</th><th>Основание</th><th></th></tr></thead>
   <tbody>
   {% for g in grades %}
     <tr>
+      <td>{{ g.assessed_on.strftime('%d.%m.%Y') }}</td>
       <td>{{ g.study_year }}</td>
-      <td class="num">{{ g.semester }}</td>
       <td>{{ g.student }}</td>
       <td>{{ g.group_name }}</td>
-      <td>{{ g.discipline }} <span class="muted">({{ g.report_form }})</span></td>
+      <td>{{ g.discipline }}, {{ g.semester }} сем. <span class="muted">({{ g.report_form }})</span></td>
+      <td class="num">{{ g.attempt_no }}</td>
       <td>{{ g.grade }}</td>
-      <td><a href="{{ url_for('teacher.grade_edit', grade_id=g.id) }}">Изменить</a></td>
+      <td>{{ g.basis_ref }}</td>
+      <td>
+        {% if g.record_status == 'черновик' %}
+          <a href="{{ url_for('teacher.grade_edit', grade_id=g.id) }}">Изменить</a>
+        {% else %}
+          <span class="badge fixed">зафиксирован</span>
+        {% endif %}
+      </td>
     </tr>
   {% else %}
-    <tr><td colspan="7" class="muted">В журнале пока нет оценок.</td></tr>
+    <tr><td colspan="9" class="muted">В журнале пока нет записей.</td></tr>
   {% endfor %}
   </tbody>
 </table>

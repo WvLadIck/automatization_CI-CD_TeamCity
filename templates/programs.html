@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% from "_macros.html" import dean_nav %}
+{% block title %}Образовательные программы{% endblock %}
+{% block content %}
+<h1>Образовательные программы</h1>
+{{ dean_nav('dean.programs') }}
+<p><a class="button" href="{{ url_for('dean.program_new') }}">Добавить программу</a></p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Код</th><th>Профиль</th><th>Год набора</th><th>Форма обучения</th><th>Версия</th><th>Семестров</th><th></th></tr></thead>
+  <tbody>
+  {% for p in programs %}
+    <tr>
+      <td>{{ p.direction_code }}</td>
+      <td>{{ p.profile }}</td>
+      <td class="num">{{ p.cohort_year }}</td>
+      <td>{{ p.study_form }}</td>
+      <td class="num">{{ p.revision_no }}</td>
+      <td class="num">{{ p.semester_count }}</td>
+      <td><a href="{{ url_for('dean.program_edit', program_id=p.id) }}">Изменить</a></td>
+    </tr>
+  {% else %}
+    <tr><td colspan="7" class="muted">Программ пока нет — добавьте первую.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+<p class="muted">Если по программе уже есть зафиксированные результаты, она не изменяется: добавьте новую версию с номером на единицу больше.</p>
+{% endblock %}

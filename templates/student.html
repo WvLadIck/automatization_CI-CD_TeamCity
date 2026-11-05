@@ -1,10 +1,18 @@
 {% extends "base.html" %}
+{% from "_macros.html" import program_label %}
 {% block title %}Студенту{% endblock %}
 {% block content %}
 <h1>Студенту</h1>
 
-<h2>Часы и форма отчётности по дисциплине</h2>
+<h2>Часы и форма аттестации по дисциплине</h2>
 <form class="inline" method="get">
+  <label>Программа
+    <select name="program_id">
+      {% for p in programs %}
+        <option value="{{ p.id }}" {{ 'selected' if p.id == program_id }}>{{ program_label(p) }}</option>
+      {% endfor %}
+    </select>
+  </label>
   <label>Дисциплина
     <select name="discipline">
       {% for d in disciplines %}
@@ -17,18 +25,18 @@
 {% if plan_rows %}
   <div class="table-wrap">
   <table>
-    <thead><tr><th>Семестр</th><th>Часы</th><th>Форма отчётности</th></tr></thead>
+    <thead><tr><th>Семестр</th><th>Часы</th><th>З.е.</th><th>Форма аттестации</th></tr></thead>
     <tbody>
     {% for p in plan_rows %}
-      <tr><td class="num">{{ p.semester }}</td><td class="num">{{ p.hours }}</td><td>{{ p.report_form }}</td></tr>
+      <tr><td class="num">{{ p.semester }}</td><td class="num">{{ p.hours }}</td><td class="num">{{ p.credits }}</td><td>{{ p.report_form }}</td></tr>
     {% endfor %}
     </tbody>
   </table>
   </div>
-  <p class="result">Всего по «{{ discipline }}»: <strong>{{ total_hours }}</strong> ч.</p>
+  <p class="result">Всего по «{{ discipline }}»: <strong>{{ total_hours }}</strong> ч. ({{ total_credits }} з.е.)</p>
 {% endif %}
 
-<h2>Мои оценки</h2>
+<h2>Мои результаты</h2>
 <form class="inline" method="get">
   <label>Студент
     <select name="student_id">
@@ -37,17 +45,24 @@
       {% endfor %}
     </select>
   </label>
-  <button type="submit">Показать оценки</button>
+  <button type="submit">Показать результаты</button>
 </form>
 {% if student %}
   <div class="table-wrap">
   <table>
-    <thead><tr><th>Учебный год</th><th>Семестр</th><th>Дисциплина</th><th>Оценка</th></tr></thead>
+    <thead><tr><th>Уч. год</th><th>Дата</th><th>Семестр</th><th>Дисциплина</th><th>Попытка</th><th>Результат</th></tr></thead>
     <tbody>
     {% for g in my_grades %}
-      <tr><td>{{ g.study_year }}</td><td class="num">{{ g.semester }}</td><td>{{ g.discipline }} <span class="muted">({{ g.report_form }})</span></td><td>{{ g.grade }}</td></tr>
+      <tr>
+        <td>{{ g.study_year }}</td>
+        <td>{{ g.assessed_on.strftime('%d.%m.%Y') }}</td>
+        <td class="num">{{ g.semester }}</td>
+        <td>{{ g.discipline }} <span class="muted">({{ g.report_form }})</span></td>
+        <td class="num">{{ g.attempt_no }}</td>
+        <td>{{ g.grade }}{% if g.record_status == 'черновик' %} <span class="badge">черновик</span>{% endif %}</td>
+      </tr>
     {% else %}
-      <tr><td colspan="4" class="muted">У студента пока нет оценок.</td></tr>
+      <tr><td colspan="6" class="muted">У студента пока нет результатов.</td></tr>
     {% endfor %}
     </tbody>
   </table>

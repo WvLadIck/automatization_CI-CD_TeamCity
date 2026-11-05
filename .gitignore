@@ -3,4 +3,4 @@ __pycache__/
 *.pyc
 .env
 logs/
-pgdata/
+db/pgdata/

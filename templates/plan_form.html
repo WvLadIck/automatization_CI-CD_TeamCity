@@ -1,13 +1,21 @@
 {% extends "base.html" %}
+{% from "_macros.html" import program_label %}
 {% block title %}{{ 'Изменить дисциплину' if plan else 'Новая дисциплина' }}{% endblock %}
 {% block content %}
 <h1>{{ 'Изменить дисциплину' if plan else 'Новая дисциплина' }}</h1>
 <form class="card" method="post">
-  <label>Специальность <input name="specialty" required maxlength="100" value="{{ plan.specialty if plan }}"></label>
-  <label>Дисциплина <input name="discipline" required maxlength="100" value="{{ plan.discipline if plan }}"></label>
-  <label>Семестр <input name="semester" type="number" required min="1" max="12" value="{{ plan.semester if plan }}"></label>
-  <label>Количество часов <input name="hours" type="number" required min="1" max="1000" value="{{ plan.hours if plan }}"></label>
-  <label>Форма отчётности
+  <label>Образовательная программа
+    <select name="program_id">
+      {% for p in programs %}
+        <option value="{{ p.id }}" {{ 'selected' if plan and plan.program_id == p.id }}>{{ program_label(p) }} ({{ p.semester_count }} сем.)</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Дисциплина <input name="discipline" required maxlength="150" value="{{ plan.discipline if plan }}"></label>
+  <label>Семестр <input name="semester" type="number" required min="1" max="14" value="{{ plan.semester if plan }}"></label>
+  <label>Количество часов <input name="hours" type="number" required min="1" value="{{ plan.hours if plan }}"></label>
+  <p class="hint">1 зачётная единица = 36 часов.</p>
+  <label>Форма аттестации
     <select name="report_form">
       {% for f in report_forms %}
         <option value="{{ f }}" {{ 'selected' if plan and plan.report_form == f }}>{{ f }}</option>

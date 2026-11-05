@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% from "_macros.html" import dean_nav, program_label %}
+{% block title %}Группы{% endblock %}
+{% block content %}
+<h1>Учебные группы</h1>
+{{ dean_nav('dean.groups') }}
+<p><a class="button" href="{{ url_for('dean.group_new') }}">Добавить группу</a></p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Группа</th><th>Образовательная программа</th><th></th></tr></thead>
+  <tbody>
+  {% for g in groups %}
+    <tr>
+      <td>{{ g.group_name }}</td>
+      <td>{{ program_label(g) }}</td>
+      <td><a href="{{ url_for('dean.group_edit', group_id=g.id) }}">Изменить</a></td>
+    </tr>
+  {% else %}
+    <tr><td colspan="3" class="muted">Групп пока нет — сначала добавьте программу, затем группу.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Изменить программу' if program else 'Новая программа' }}{% endblock %}
+{% block content %}
+<h1>{{ 'Изменить программу' if program else 'Новая программа' }}</h1>
+<form class="card" method="post">
+  <label>Код направления (специальности) <input name="direction_code" required maxlength="8" pattern="[0-9]{2}\.0[345]\.[0-9]{2}" placeholder="09.03.01" value="{{ program.direction_code if program }}"></label>
+  <p class="hint">Средняя часть: 03 — бакалавриат, 04 — магистратура, 05 — специалитет.</p>
+  <label>Профиль (направленность) <input name="profile" required maxlength="150" value="{{ program.profile if program }}"></label>
+  <label>Год набора <input name="cohort_year" type="number" required min="2016" value="{{ program.cohort_year if program }}"></label>
+  <label>Форма обучения
+    <select name="study_form">
+      {% for f in study_forms %}
+        <option value="{{ f }}" {{ 'selected' if program and program.study_form == f }}>{{ f }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Версия плана <input name="revision_no" type="number" required min="1" value="{{ program.revision_no if program else 1 }}"></label>
+  <label>Количество семестров <input name="semester_count" type="number" required min="1" max="14" value="{{ program.semester_count if program }}"></label>
+  <p><button type="submit">{{ 'Сохранить изменения' if program else 'Добавить программу' }}</button>
+     <a href="{{ url_for('dean.programs') }}">Отмена</a></p>
+</form>
+{% endblock %}

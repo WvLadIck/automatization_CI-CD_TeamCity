@@ -1,0 +1,13 @@
+{% macro program_label(p) -%}
+{{ p.direction_code }} {{ p.profile }} — набор {{ p.cohort_year }}, {{ p.study_form }}, ред. {{ p.revision_no }}
+{%- endmacro %}
+
+{% macro dean_nav(current) -%}
+<p class="subnav">
+  {% for endpoint, title in [('dean.students', 'Студенты'), ('dean.groups', 'Группы'),
+                             ('dean.programs', 'Образовательные программы'), ('dean.plans', 'Учебный план')] %}
+    {% if endpoint == current %}<b>{{ title }}</b>{% else %}<a href="{{ url_for(endpoint) }}">{{ title }}</a>{% endif %}
+    {%- if not loop.last %} · {% endif %}
+  {% endfor %}
+</p>
+{%- endmacro %}

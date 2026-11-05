@@ -1,8 +1,10 @@
-"""Тестовые данные
+"""Тестовые данные из db/seed.sql
 
 Revision ID: 0002
 Revises: 0001
 """
+from pathlib import Path
+
 from alembic import op
 
 revision = "0002"
@@ -10,39 +12,14 @@ down_revision = "0001"
 branch_labels = None
 depends_on = None
 
-SEED_SQL = """
--- Тестовые данные
-
-INSERT INTO students (last_name, first_name, patronymic, admission_year, study_form, group_name) VALUES
-    ('Иванов',   'Иван',     'Иванович',    2024, 'дневная',  '241-326'),
-    ('Петрова',  'Анна',     'Сергеевна',   2024, 'дневная',  '241-326'),
-    ('Смирнов',  'Дмитрий',  'Олегович',    2024, 'вечерняя', '241-351'),
-    ('Кузнецова','Мария',    'Андреевна',   2023, 'заочная',  '231-372'),
-    ('Попов',    'Алексей',  NULL,          2023, 'дневная',  '231-326'),
-    ('Васильева','Елена',    'Павловна',    2024, 'заочная',  '241-372');
-
-INSERT INTO study_plans (specialty, discipline, semester, hours, report_form) VALUES
-    ('Информационная безопасность', 'Базы данных',            3, 144, 'экзамен'),
-    ('Информационная безопасность', 'Дискретная математика',  1, 108, 'экзамен'),
-    ('Информационная безопасность', 'Дискретная математика',  2, 72,  'зачёт'),
-    ('Информационная безопасность', 'Английский язык',        1, 72,  'зачёт'),
-    ('Информационная безопасность', 'Программирование',       1, 144, 'экзамен');
-
-INSERT INTO grades (study_year, student_id, plan_id, grade) VALUES
-    ('2024/2025', 1, 2, '5'),
-    ('2024/2025', 1, 4, 'зачёт'),
-    ('2024/2025', 2, 2, '4'),
-    ('2024/2025', 2, 5, '5'),
-    ('2024/2025', 3, 2, '3'),
-    ('2024/2025', 3, 4, 'незачёт'),
-    ('2023/2024', 4, 5, '4'),
-    ('2025/2026', 5, 1, '2');
-"""
+SEED_FILE = Path(__file__).resolve().parents[2] / "db" / "seed.sql"
 
 
 def upgrade():
-    op.execute(SEED_SQL)
+    op.get_bind().exec_driver_sql(SEED_FILE.read_text(encoding="utf-8"))
 
 
 def downgrade():
-    op.execute("TRUNCATE grades, study_plans, students RESTART IDENTITY CASCADE")
+    op.get_bind().exec_driver_sql(
+        "TRUNCATE grades, study_plans, students, student_groups, educational_programs "
+        "RESTART IDENTITY")

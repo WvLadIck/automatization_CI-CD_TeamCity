@@ -1,9 +1,8 @@
 {% extends "base.html" %}
-{% block title %}{{ 'Изменить оценку' if record else 'Новая оценка' }}{% endblock %}
+{% block title %}{{ 'Изменить запись' if record else 'Новая запись' }}{% endblock %}
 {% block content %}
-<h1>{{ 'Изменить оценку' if record else 'Новая оценка' }}</h1>
+<h1>{{ 'Изменить запись журнала' if record else 'Новая запись журнала' }}</h1>
 <form class="card" method="post">
-  <label>Учебный год <input name="study_year" required placeholder="2025/2026" value="{{ record.study_year if record }}"></label>
   <label>Студент
     <select name="student_id">
       {% for s in students %}
@@ -14,19 +13,37 @@
   <label>Дисциплина
     <select name="plan_id">
       {% for p in plans %}
-        <option value="{{ p.id }}" {{ 'selected' if record and record.plan_id == p.id }}>{{ p.discipline }}, {{ p.semester }} сем. ({{ p.report_form }})</option>
+        <option value="{{ p.id }}" {{ 'selected' if record and record.plan_id == p.id }}>{{ p.discipline }}, {{ p.semester }} сем. ({{ p.report_form }}) — {{ p.direction_code }}, {{ p.cohort_year }}, {{ p.study_form }}</option>
       {% endfor %}
     </select>
   </label>
-  <label>Оценка
+  <p class="hint">Дисциплина должна быть из плана программы, по которой учится группа студента.</p>
+  <label>Номер попытки
+    <select name="attempt_no">
+      {% for a in attempts %}
+        <option value="{{ a }}" {{ 'selected' if record and record.attempt_no == a }}>{{ a }}{{ ' — основная' if a == 1 else (' — повторная' if a == 2 else ' — комиссия') }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Дата сдачи <input name="assessed_on" type="date" required min="2016-01-01" value="{{ record.assessed_on if record }}"></label>
+  <label>Результат
     <select name="grade">
-      {% for g in ['5', '4', '3', '2', 'зачёт', 'незачёт'] %}
+      {% for g in grades %}
         <option value="{{ g }}" {{ 'selected' if record and record.grade == g }}>{{ g }}</option>
       {% endfor %}
     </select>
   </label>
-  <p class="muted">Для экзамена ставится оценка 2–5, для зачёта — «зачёт» или «незачёт».</p>
-  <p><button type="submit">{{ 'Сохранить изменения' if record else 'Добавить оценку' }}</button>
+  <p class="hint">Экзамен и зачёт с оценкой — 2–5, зачёт — «зачтено» или «не зачтено». При уважительной неявке пересдача вносится с тем же номером попытки и новой датой.</p>
+  <label>Основание <input name="basis_ref" required maxlength="64" placeholder="Ведомость № 10231 от 20.01.2025" value="{{ record.basis_ref if record }}"></label>
+  <label>Состояние записи
+    <select name="record_status">
+      {% for st in record_statuses %}
+        <option value="{{ st }}" {{ 'selected' if record and record.record_status == st }}>{{ st }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <p class="hint">Зафиксированную запись (ведомость подписана) изменить уже нельзя.</p>
+  <p><button type="submit">{{ 'Сохранить изменения' if record else 'Добавить запись' }}</button>
      <a href="{{ url_for('teacher.grades') }}">Отмена</a></p>
 </form>
 {% endblock %}

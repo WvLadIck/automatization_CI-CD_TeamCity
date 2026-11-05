@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% from "_macros.html" import program_label %}
+{% block title %}{{ 'Изменить группу' if group else 'Новая группа' }}{% endblock %}
+{% block content %}
+<h1>{{ 'Изменить группу' if group else 'Новая группа' }}</h1>
+<form class="card" method="post">
+  <label>Номер группы <input name="group_name" required maxlength="8" pattern="[0-9]{3}-[0-9]{3,4}" placeholder="241-326" value="{{ group.group_name if group }}"></label>
+  <p class="hint">Вид 241-326 или 241-3210.</p>
+  <label>Образовательная программа
+    <select name="program_id">
+      {% for p in programs %}
+        <option value="{{ p.id }}" {{ 'selected' if group and group.program_id == p.id }}>{{ program_label(p) }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <p><button type="submit">{{ 'Сохранить изменения' if group else 'Добавить группу' }}</button>
+     <a href="{{ url_for('dean.groups') }}">Отмена</a></p>
+</form>
+{% endblock %}
