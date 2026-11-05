@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Изменить дисциплину' if plan else 'Новая дисциплина' }}{% endblock %}
+{% block content %}
+<h1>{{ 'Изменить дисциплину' if plan else 'Новая дисциплина' }}</h1>
+<form class="card" method="post">
+  <label>Специальность <input name="specialty" required maxlength="100" value="{{ plan.specialty if plan }}"></label>
+  <label>Дисциплина <input name="discipline" required maxlength="100" value="{{ plan.discipline if plan }}"></label>
+  <label>Семестр <input name="semester" type="number" required min="1" max="12" value="{{ plan.semester if plan }}"></label>
+  <label>Количество часов <input name="hours" type="number" required min="1" max="1000" value="{{ plan.hours if plan }}"></label>
+  <label>Форма отчётности
+    <select name="report_form">
+      {% for f in report_forms %}
+        <option value="{{ f }}" {{ 'selected' if plan and plan.report_form == f }}>{{ f }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <p><button type="submit">{{ 'Сохранить изменения' if plan else 'Добавить дисциплину' }}</button>
+     <a href="{{ url_for('dean.plans') }}">Отмена</a></p>
+</form>
+{% endblock %}

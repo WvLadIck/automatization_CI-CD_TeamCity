@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Изменить оценку' if record else 'Новая оценка' }}{% endblock %}
+{% block content %}
+<h1>{{ 'Изменить оценку' if record else 'Новая оценка' }}</h1>
+<form class="card" method="post">
+  <label>Учебный год <input name="study_year" required placeholder="2025/2026" value="{{ record.study_year if record }}"></label>
+  <label>Студент
+    <select name="student_id">
+      {% for s in students %}
+        <option value="{{ s.id }}" {{ 'selected' if record and record.student_id == s.id }}>{{ s.last_name }} {{ s.first_name }}, {{ s.group_name }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Дисциплина
+    <select name="plan_id">
+      {% for p in plans %}
+        <option value="{{ p.id }}" {{ 'selected' if record and record.plan_id == p.id }}>{{ p.discipline }}, {{ p.semester }} сем. ({{ p.report_form }})</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Оценка
+    <select name="grade">
+      {% for g in ['5', '4', '3', '2', 'зачёт', 'незачёт'] %}
+        <option value="{{ g }}" {{ 'selected' if record and record.grade == g }}>{{ g }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <p class="muted">Для экзамена ставится оценка 2–5, для зачёта — «зачёт» или «незачёт».</p>
+  <p><button type="submit">{{ 'Сохранить изменения' if record else 'Добавить оценку' }}</button>
+     <a href="{{ url_for('teacher.grades') }}">Отмена</a></p>
+</form>
+{% endblock %}

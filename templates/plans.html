@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Учебный план{% endblock %}
+{% block content %}
+<h1>Учебный план</h1>
+<p><a href="{{ url_for('dean.students') }}">Студенты</a></p>
+<p><a class="button" href="{{ url_for('dean.plan_new') }}">Добавить дисциплину</a></p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Специальность</th><th>Дисциплина</th><th>Семестр</th><th>Часы</th><th>Отчётность</th><th></th></tr></thead>
+  <tbody>
+  {% for p in plans %}
+    <tr>
+      <td>{{ p.specialty }}</td>
+      <td>{{ p.discipline }}</td>
+      <td class="num">{{ p.semester }}</td>
+      <td class="num">{{ p.hours }}</td>
+      <td>{{ p.report_form }}</td>
+      <td><a href="{{ url_for('dean.plan_edit', plan_id=p.id) }}">Изменить</a></td>
+    </tr>
+  {% else %}
+    <tr><td colspan="6" class="muted">Учебный план пуст — добавьте дисциплину.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

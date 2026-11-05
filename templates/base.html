@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Учёт успеваемости{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1e2a3a;
+      --muted: #5b6878;
+      --cover: #2b4c7e;
+      --line: #d9dee5;
+      --row: #f3f5f8;
+      --ok: #2f6b45;
+      --bad: #a23b3b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font: 17px/1.5 "PT Sans", Arial, sans-serif;
+      color: var(--ink);
+      background: #fff;
+    }
+    header { background: var(--cover); color: #fff; }
+    header .wrap { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 28px; padding: 14px 20px; }
+    header a { color: #fff; text-decoration: none; }
+    header .brand { font-size: 20px; font-weight: 700; margin-right: auto; }
+    header nav a { opacity: .85; }
+    header nav a:hover, header nav a.active { opacity: 1; text-decoration: underline; text-underline-offset: 4px; }
+    .wrap { max-width: 980px; margin: 0 auto; }
+    main.wrap { padding: 28px 20px 60px; }
+    h1 { font-size: 28px; margin: 0 0 18px; }
+    h2 { font-size: 21px; margin: 32px 0 12px; }
+    a { color: var(--cover); }
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 3px solid #8fb1e3; outline-offset: 2px;
+    }
+    .flash { border-left: 4px solid var(--ok); background: #eef6f0; padding: 10px 14px; margin-bottom: 20px; }
+    .error { border-left: 4px solid var(--bad); background: #f9eded; padding: 14px 16px; }
+    .table-wrap { overflow-x: auto; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+    th { color: var(--muted); font-weight: 700; border-bottom: 2px solid var(--ink); }
+    tbody tr:hover { background: var(--row); }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    form.inline { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; margin-bottom: 16px; }
+    form.card { display: grid; gap: 14px; max-width: 460px; }
+    label { display: grid; gap: 4px; color: var(--muted); font-size: 15px; }
+    input, select {
+      font: inherit; color: var(--ink); padding: 7px 9px;
+      border: 1px solid #b7c0cc; border-radius: 4px; background: #fff;
+    }
+    button, .button {
+      font: inherit; font-weight: 700; cursor: pointer; display: inline-block;
+      padding: 8px 16px; border: 0; border-radius: 4px; background: var(--cover); color: #fff;
+      text-decoration: none;
+    }
+    .result { font-size: 20px; margin: 4px 0 20px; }
+    .result strong { font-size: 32px; color: var(--cover); }
+    .muted { color: var(--muted); }
+    .roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .roles a { display: block; padding: 18px; border: 1px solid var(--line); border-top: 4px solid var(--cover); text-decoration: none; color: var(--ink); }
+    .roles a:hover { background: var(--row); }
+    .roles b { display: block; font-size: 20px; color: var(--cover); margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <a class="brand" href="{{ url_for('index') }}">Учёт успеваемости</a>
+      <nav>
+        <a href="{{ url_for('dean.students') }}" class="{{ 'active' if request.blueprint == 'dean' }}">Деканат</a>&nbsp;&nbsp;
+        <a href="{{ url_for('teacher.grades') }}" class="{{ 'active' if request.blueprint == 'teacher' }}">Преподаватель</a>&nbsp;&nbsp;
+        <a href="{{ url_for('student.index') }}" class="{{ 'active' if request.blueprint == 'student' }}">Студент</a>
+      </nav>
+    </div>
+  </header>
+  <main class="wrap">
+    {% for message in get_flashed_messages() %}
+      <div class="flash">{{ message }}</div>
+    {% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

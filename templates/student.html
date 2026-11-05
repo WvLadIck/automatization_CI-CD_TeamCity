@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Студенту{% endblock %}
+{% block content %}
+<h1>Студенту</h1>
+
+<h2>Часы и форма отчётности по дисциплине</h2>
+<form class="inline" method="get">
+  <label>Дисциплина
+    <select name="discipline">
+      {% for d in disciplines %}
+        <option value="{{ d.discipline }}" {{ 'selected' if d.discipline == discipline }}>{{ d.discipline }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <button type="submit">Показать</button>
+</form>
+{% if plan_rows %}
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Семестр</th><th>Часы</th><th>Форма отчётности</th></tr></thead>
+    <tbody>
+    {% for p in plan_rows %}
+      <tr><td class="num">{{ p.semester }}</td><td class="num">{{ p.hours }}</td><td>{{ p.report_form }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  <p class="result">Всего по «{{ discipline }}»: <strong>{{ total_hours }}</strong> ч.</p>
+{% endif %}
+
+<h2>Мои оценки</h2>
+<form class="inline" method="get">
+  <label>Студент
+    <select name="student_id">
+      {% for s in students %}
+        <option value="{{ s.id }}" {{ 'selected' if student and student.id == s.id }}>{{ s.last_name }} {{ s.first_name }}, {{ s.group_name }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <button type="submit">Показать оценки</button>
+</form>
+{% if student %}
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Учебный год</th><th>Семестр</th><th>Дисциплина</th><th>Оценка</th></tr></thead>
+    <tbody>
+    {% for g in my_grades %}
+      <tr><td>{{ g.study_year }}</td><td class="num">{{ g.semester }}</td><td>{{ g.discipline }} <span class="muted">({{ g.report_form }})</span></td><td>{{ g.grade }}</td></tr>
+    {% else %}
+      <tr><td colspan="4" class="muted">У студента пока нет оценок.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+{% endif %}
+{% endblock %}

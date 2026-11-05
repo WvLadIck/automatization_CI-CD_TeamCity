@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Студенты{% endblock %}
+{% block content %}
+<h1>Студенты</h1>
+<p><a href="{{ url_for('dean.plans') }}">Учебный план</a></p>
+
+<h2>Количество студентов по форме обучения</h2>
+<form class="inline" method="get">
+  <label>Форма обучения
+    <select name="study_form">
+      {% for f in study_forms %}
+        <option value="{{ f }}" {{ 'selected' if f == selected }}>{{ f }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <button type="submit">Посчитать</button>
+</form>
+{% if count is not none %}
+  <p class="result">Форма «{{ selected }}»: <strong>{{ count }}</strong> студ.</p>
+{% endif %}
+
+<h2>Список студентов</h2>
+<p><a class="button" href="{{ url_for('dean.student_new') }}">Добавить студента</a></p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>ФИО</th><th>Год поступления</th><th>Форма обучения</th><th>Группа</th><th></th></tr></thead>
+  <tbody>
+  {% for s in students %}
+    <tr>
+      <td>{{ s.last_name }} {{ s.first_name }} {{ s.patronymic or '' }}</td>
+      <td class="num">{{ s.admission_year }}</td>
+      <td>{{ s.study_form }}</td>
+      <td>{{ s.group_name }}</td>
+      <td><a href="{{ url_for('dean.student_edit', student_id=s.id) }}">Изменить</a></td>
+    </tr>
+  {% else %}
+    <tr><td colspan="5" class="muted">Студентов пока нет — добавьте первого.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

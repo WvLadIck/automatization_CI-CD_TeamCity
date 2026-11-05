@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Учёт успеваемости студентов</h1>
+<p class="muted">Выберите, кем вы работаете в системе.</p>
+<div class="roles">
+  <a href="{{ url_for('dean.students') }}"><b>Деканат</b>Студенты, формы обучения и учебный план</a>
+  <a href="{{ url_for('teacher.grades') }}"><b>Преподаватель</b>Журнал успеваемости: оценки и зачёты</a>
+  <a href="{{ url_for('student.index') }}"><b>Студент</b>Часы по дисциплинам и свои оценки</a>
+</div>
+{% endblock %}
