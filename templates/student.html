@@ -67,5 +67,8 @@
     </tbody>
   </table>
   </div>
+  {% if avg_grade is not none %}
+    <p class="result">Средний балл по итоговым оценкам: <strong>{{ avg_grade }}</strong></p>
+  {% endif %}
 {% endif %}
 {% endblock %}
