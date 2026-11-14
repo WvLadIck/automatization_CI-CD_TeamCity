@@ -35,7 +35,7 @@ def index():
 
     # Результаты аттестации выбранного студента
     student_id = request.args.get("student_id", type=int)
-    student, my_grades = None, None
+    student, my_grades, avg_grade = None, None, None
     if student_id:
         student = query("SELECT * FROM students WHERE id = %s", (student_id,), one=True)
         if student is None:
@@ -49,10 +49,20 @@ def index():
         )
         for row in my_grades:
             row["study_year"] = study_year(row["assessed_on"])
+        # Средний балл: итог по каждой дисциплине (последняя попытка), только оценки 2–5
+        avg_grade = query(
+            "SELECT ROUND(AVG(grade::int), 2) AS value FROM ("
+            " SELECT DISTINCT ON (plan_id) grade FROM grades"
+            " WHERE student_id = %s AND record_status = 'зафиксирован'"
+            " AND grade <> 'не явился'"
+            " ORDER BY plan_id, attempt_no DESC, assessed_on DESC"
+            ") AS final_results WHERE grade IN ('2', '3', '4', '5')",
+            (student_id,), one=True,
+        )["value"]
 
     return render_template(
         "student.html", disciplines=disciplines, programs=programs, students=students,
         discipline=discipline, program_id=program_id, plan_rows=plan_rows,
         total_hours=total_hours, total_credits=credit_units(total_hours or 0),
-        student=student, my_grades=my_grades,
+        student=student, my_grades=my_grades, avg_grade=avg_grade,
     )
