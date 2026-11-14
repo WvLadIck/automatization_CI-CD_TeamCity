@@ -1,0 +1,4 @@
+services:
+  app:
+    build: !reset null
+    image: ${APP_IMAGE}:${APP_TAG:-1.0}

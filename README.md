@@ -79,3 +79,4 @@ python3 app.py
 ## Лицензия
 
 MIT — см. файл [LICENSE](LICENSE).
+Сборка образа: TeamCity, конфигурация Build.
