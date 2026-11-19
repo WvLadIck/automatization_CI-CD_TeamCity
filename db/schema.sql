@@ -423,6 +423,13 @@ CREATE INDEX students_group_status_idx ON public.students USING btree (group_id,
 
 
 --
+-- Name: students_name_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX students_name_idx ON public.students USING btree (last_name, first_name);
+
+
+--
 -- Name: study_plans_discipline_idx; Type: INDEX; Schema: public; Owner: -
 --
 
