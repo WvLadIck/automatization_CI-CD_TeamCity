@@ -1,0 +1,16 @@
+rules:
+  - id: studentgrades-sql-public-grant
+    languages: [generic]
+    message: "Не выдавайте все права роли PUBLIC."
+    severity: ERROR
+    paths:
+      include: ["**/*.sql", "/migrations/**/*.py"]
+    pattern-regex: '(?is)\bGRANT\s+ALL(?:\s+PRIVILEGES)?\s+ON\b[^;]*\bTO\s+PUBLIC\b'
+
+  - id: studentgrades-sql-security-definer
+    languages: [generic]
+    message: "Функции SECURITY DEFINER требуют отдельного согласования."
+    severity: ERROR
+    paths:
+      include: ["**/*.sql", "/migrations/**/*.py"]
+    pattern-regex: '(?i)\bSECURITY\s+DEFINER\b'

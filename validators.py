@@ -94,6 +94,7 @@ def validate_student(form, today=None):
         "admission_year": _year(form, "admission_year", "Год поступления", today),
         "group_id": _int(form, "group_id", "Группа", 1, 2**31 - 1),
         "status": _choice(form.get("status"), STUDENT_STATUSES, "Статус"),
+        "academic_note": _text(form, "academic_note", "Примечание", required=False, max_len=120),
     }
 
 

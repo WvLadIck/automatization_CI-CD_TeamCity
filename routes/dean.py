@@ -136,8 +136,9 @@ def student_new():
         data = validate_student(request.form)
         execute(
             "INSERT INTO students (last_name, first_name, patronymic, student_no, "
-            "admission_year, group_id, status) VALUES (%(last_name)s, %(first_name)s, "
-            "%(patronymic)s, %(student_no)s, %(admission_year)s, %(group_id)s, %(status)s)",
+            "admission_year, group_id, status, academic_note) "
+            "VALUES (%(last_name)s, %(first_name)s, %(patronymic)s, %(student_no)s, "
+            "%(admission_year)s, %(group_id)s, %(status)s, %(academic_note)s)",
             data,
         )
         flash("Студент добавлен")
@@ -156,7 +157,7 @@ def student_edit(student_id):
             "UPDATE students SET last_name = %(last_name)s, first_name = %(first_name)s, "
             "patronymic = %(patronymic)s, student_no = %(student_no)s, "
             "admission_year = %(admission_year)s, group_id = %(group_id)s, "
-            "status = %(status)s WHERE id = %(id)s",
+            "status = %(status)s, academic_note = %(academic_note)s WHERE id = %(id)s",
             data,
         )
         flash("Изменения сохранены")
