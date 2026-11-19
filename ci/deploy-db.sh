@@ -17,7 +17,12 @@ case "$mode" in
   *) exit 2 ;;
 esac
 
-docker compose pull app
+if [ "$mode" = stage ] && [ -n "${DEPLOY_IMAGE_ID:-}" ]; then
+  test "$(docker image inspect -f '{{.Id}}' "${APP_IMAGE:?}:$APP_TAG")" = "$DEPLOY_IMAGE_ID"
+else
+  docker compose pull app
+fi
+
 if [ "$mode" != stage ]; then
   image_id=$(docker image inspect -f '{{.Id}}' "${APP_IMAGE:-wvladick/student-grades-app}:$APP_TAG")
   test "$image_id" = "$STAGE_IMAGE_ID"
@@ -67,6 +72,13 @@ curl --retry 10 --retry-delay 2 --retry-all-errors --fail --silent \
 docker compose ps
 
 if [ "$mode" = stage ]; then
+
+ if [ -n "${DEPLOY_IMAGE_ID:-}" ]; then
+    app=$(docker compose ps -q app)
+    test "$(docker inspect -f '{{.Config.Image}}' "$app")" = "${APP_IMAGE:?}:$APP_TAG"
+    test "$(docker inspect -f '{{.Image}}' "$app")" = "$DEPLOY_IMAGE_ID"
+  fi
+  
   marker=$(mktemp "$HOME/studentgrades-stage-release.XXXXXX")
   git rev-parse HEAD^{tree} > "$marker"
   echo "$APP_TAG" >> "$marker"
