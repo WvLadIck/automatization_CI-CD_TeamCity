@@ -24,6 +24,10 @@
       {% endfor %}
     </select>
   </label>
+  <label>Примечание
+  <input name="academic_note" maxlength="120"
+         value="{{ (student.academic_note or '') if student else '' }}">
+</label>
   <p><button type="submit">{{ 'Сохранить изменения' if student else 'Добавить студента' }}</button>
      <a href="{{ url_for('dean.students') }}">Отмена</a></p>
 </form>
